@@ -1,0 +1,38 @@
+#!/usr/bin/python
+import sys
+import os
+import shutil
+
+def rmRf(pathToDir):
+    fullPath = dir + '/' + pathToDir
+    for dirFile in os.listdir(fullPath):
+	if dirFile == '.htaccess':
+            continue
+        shutil.rmtree(fullPath + '/' + dirFile)
+
+def clearCache():
+    for path in pathList['cache']:
+        rmRf(path)
+    print 'Cache was cleared!'
+
+def clearStatic():
+    for path in pathList['pub']:
+        rmRf(path)
+    print 'Static was cleared!'
+
+def clearAll():
+    clearCache()
+    clearStatic()
+
+def run(argument):
+    switcher = {
+        "cache": clearCache,
+        "static": clearStatic,
+	"all": clearAll
+    }
+    func = switcher.get(argument, lambda: "Incorrect command")
+    return func()
+
+pathList = {'cache': ['var/cache', 'var/page_cache'], 'pub': ['pub/static']}
+dir = os.getcwd()
+run(sys.argv[1])
