@@ -24,15 +24,22 @@ def clearAll():
     clearCache()
     clearStatic()
 
+def cron():
+    os.system(cronCommand)
+    print 'Command "' + cronCommand + '" was ranned!'
+    
+
 def run(argument):
     switcher = {
         "cache": clearCache,
         "static": clearStatic,
-	"all": clearAll
+	"all": clearAll,
+	"cron": cron
     }
     func = switcher.get(argument, lambda: "Incorrect command")
     return func()
 
+cronCommand = "php -f bin/magento cron:run"
 pathList = {'cache': ['var/cache', 'var/page_cache'], 'pub': ['pub/static']}
 dir = os.getcwd()
 run(sys.argv[1])
