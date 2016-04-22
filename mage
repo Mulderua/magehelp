@@ -27,19 +27,34 @@ def clearAll():
 def cron():
     os.system(cronCommand)
     print 'Command "' + cronCommand + '" was ranned!'
-    
+
+def install():
+    os.system(installCommand)
+    print 'Command "' + installCommand + '" was ranned!'
+
+def uninstall():
+    os.system(uninstallCommand)
+    print 'Command "' + uninstallCommand + '" was ranned!'
+
+def reinstall():
+    uninstall()
+    install()    
 
 def run(argument):
     switcher = {
         "cache": clearCache,
         "static": clearStatic,
 	"all": clearAll,
-	"cron": cron
+	"cron": cron,
+	"reinstall": reinstall
     }
     func = switcher.get(argument, lambda: "Incorrect command")
     return func()
 
 cronCommand = "php -f bin/magento cron:run"
+uninstallCommand = "php -f bin/magento setup:uninstall"
+installCommand = 'php -f bin/magento setup:install --language="en_US" --timezone="Europe/Kiev" --currency="USD" --db-host="localhost" --db-name="eemagento" --db-user="root" --backend-frontname="admin" --base-url="http://eemagento.local" --admin-lastname="Admin" --admin-firstname="Admin" --admin-email="admin@example.com" --admin-user="admin" --admin-password="123123q"'
+
 pathList = {'cache': ['var/cache', 'var/page_cache'], 'pub': ['pub/static']}
 dir = os.getcwd()
 run(sys.argv[1])
