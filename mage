@@ -20,9 +20,15 @@ def clearStatic():
         rmRf(path)
     print 'Static was cleared!'
 
+def clearGeneration():
+    for path in pathList['generation']:
+        rmRf(path)
+    print 'Generation was cleared!'
+
 def clearAll():
     clearCache()
     clearStatic()
+    clearGeneration()
 
 def cron():
     os.system(cronCommand)
@@ -40,21 +46,27 @@ def reinstall():
     uninstall()
     install()    
 
+def reindex():
+    os.system(reindexCommand)
+    print 'Command "' + reindexCommand + '" was ranned!'
+
 def run(argument):
     switcher = {
         "cache": clearCache,
         "static": clearStatic,
 	"all": clearAll,
 	"cron": cron,
-	"reinstall": reinstall
+	"reinstall": reinstall,
+	"reindex": reindex
     }
     func = switcher.get(argument, lambda: "Incorrect command")
     return func()
 
 cronCommand = "php -f bin/magento cron:run"
+reindexCommand = "bin/magento indexer:reindex"
 uninstallCommand = "php -f bin/magento setup:uninstall"
 installCommand = 'php -f bin/magento setup:install --language="en_US" --timezone="Europe/Kiev" --currency="USD" --db-host="localhost" --db-name="eemagento" --db-user="root" --backend-frontname="admin" --base-url="http://eemagento.local" --admin-lastname="Admin" --admin-firstname="Admin" --admin-email="admin@example.com" --admin-user="admin" --admin-password="123123q"'
 
-pathList = {'cache': ['var/cache', 'var/page_cache'], 'pub': ['pub/static']}
+pathList = {'cache': ['var/cache', 'var/page_cache'], 'pub': ['pub/static'], 'generation': ['var/generation']}
 dir = os.getcwd()
 run(sys.argv[1])
