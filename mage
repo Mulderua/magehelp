@@ -8,7 +8,11 @@ def rmRf(pathToDir):
     for dirFile in os.listdir(fullPath):
 	if dirFile == '.htaccess':
             continue
-        shutil.rmtree(fullPath + '/' + dirFile)
+	concratePath = fullPath + '/' + dirFile
+	if os.path.isdir(concratePath):
+            shutil.rmtree(concratePath)
+	if os.path.isfile(concratePath):
+            os.remove(concratePath)		
 
 def clearCache():
     for path in pathList['cache']:
@@ -50,6 +54,9 @@ def reindex():
     os.system(reindexCommand)
     print 'Command "' + reindexCommand + '" was ranned!'
 
+def getProjectName():
+    return os.path.split(os.getcwd())[1].split(".local")[0]
+
 def run(argument):
     switcher = {
         "cache": clearCache,
@@ -65,7 +72,7 @@ def run(argument):
 cronCommand = "php -f bin/magento cron:run"
 reindexCommand = "bin/magento indexer:reindex"
 uninstallCommand = "php -f bin/magento setup:uninstall"
-installCommand = 'php -f bin/magento setup:install --language="en_US" --timezone="Europe/Kiev" --currency="USD" --db-host="localhost" --db-name="eemagento" --db-user="root" --backend-frontname="admin" --base-url="http://eemagento.local" --admin-lastname="Admin" --admin-firstname="Admin" --admin-email="admin@example.com" --admin-user="admin" --admin-password="123123q"'
+installCommand = 'php -f bin/magento setup:install --language="en_US" --timezone="Europe/Kiev" --currency="USD" --db-host="localhost" --db-name="' + getProjectName() + '" --db-user="root" --backend-frontname="admin" --base-url="http://' + getProjectName() + '.local" --admin-lastname="Admin" --admin-firstname="Admin" --admin-email="admin@example.com" --admin-user="admin" --admin-password="123123q"'
 
 pathList = {'cache': ['var/cache', 'var/page_cache'], 'pub': ['pub/static'], 'generation': ['var/generation']}
 dir = os.getcwd()
