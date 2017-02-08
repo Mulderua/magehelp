@@ -5,10 +5,14 @@ import shutil
 
 def rmRf(pathToDir):
     fullPath = dir + '/' + pathToDir
+    if os.path.exists(fullPath) == False:
+            return
     for dirFile in os.listdir(fullPath):
 	if dirFile == '.htaccess':
             continue
 	concratePath = fullPath + '/' + dirFile
+	if os.path.exists(concratePath) == False:
+                continue
 	if os.path.isdir(concratePath):
             shutil.rmtree(concratePath)
 	if os.path.isfile(concratePath):
@@ -74,6 +78,6 @@ reindexCommand = "bin/magento indexer:reindex"
 uninstallCommand = "php -f bin/magento setup:uninstall"
 installCommand = 'php -f bin/magento setup:install --language="en_US" --timezone="Europe/Kiev" --currency="USD" --db-host="localhost" --db-name="' + getProjectName() + '" --db-user="root" --backend-frontname="admin" --base-url="http://' + getProjectName() + '.local" --admin-lastname="Admin" --admin-firstname="Admin" --admin-email="admin@example.com" --admin-user="admin" --admin-password="123123q"'
 
-pathList = {'cache': ['var/cache', 'var/page_cache'], 'pub': ['pub/static'], 'generation': ['var/generation']}
+pathList = {'cache': ['var/cache', 'var/page_cache'], 'pub': ['pub/static'], 'generation': ['var/generation', 'generated']}
 dir = os.getcwd()
 run(sys.argv[1])
